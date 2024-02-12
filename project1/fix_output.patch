@@ -1,0 +1,30 @@
+From 122296545564e36f467db16bbb4d1df7323f5732 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thorsten=20Kl=C3=B6=C3=9Fner?=
+ <kloessner@cs.uni-saarland.de>
+Date: Thu, 28 Apr 2022 17:28:57 +0200
+Subject: [PATCH] fix runtime failure and assembler failure output
+
+---
+ run_tests.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/run_tests.py b/run_tests.py
+index 6698409..cf2c840 100755
+--- a/run_tests.py
++++ b/run_tests.py
+@@ -85,8 +85,11 @@ def run_test(test, timeout):
+     except CalledProcessError as error:
+         print(f"{colors.BOLD}{colors.FAIL}ERROR{colors.ENDC}")
+ 
++        stdout_file.seek(0)
++        stderr_file.seek(0)
++
+         if error.returncode == SE_CODE:
+-            return False, f"error: runtime failure, error message was: \n{stdout_file.read()}"
++            return False, f"error: runtime failure, error message was: \n{stderr_file.read()}"
+ 
+         if error.returncode == AE_CODE:
+             return False, f"error: assembler failed, error message was: \n{stderr_file.read()}"
+-- 
+2.27.0.windows.1
+
